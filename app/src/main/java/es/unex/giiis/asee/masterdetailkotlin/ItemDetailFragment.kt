@@ -44,21 +44,14 @@ class ItemDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.activity_item_detail, container, false)
 
-//        val toolbar = findViewById<View>(R.id.detail_toolbar) as Toolbar
-//        setSupportActionBar(toolbar)
         val fab = v.findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
-        // Show the Up button in the action bar.
-//        val actionBar = v.supportActionBar
-//        actionBar?.setDisplayHomeAsUpEnabled(true)
-
         // Get dummy content for the selected item
-//        val item = intent.getStringExtra(ItemDetailActivity.ARG_ITEM_ID)
-        val item = "1"
+        val item = arguments?.getString(ITEM_LIST_ARG_PARAM1) ?: "1"
         mItem = DummyContent.ITEM_MAP[item]
 
         // Change Title according to item

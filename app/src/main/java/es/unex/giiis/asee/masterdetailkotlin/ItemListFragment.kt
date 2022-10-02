@@ -1,18 +1,20 @@
 package es.unex.giiis.asee.masterdetailkotlin
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import es.unex.giiis.asee.masterdetailkotlin.dummy.DummyContent
+import es.unex.giiis.asee.masterdetailkotlin.dummy.DummyContent.DummyItem
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
+const val ITEM_LIST_ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 /**
@@ -24,11 +26,12 @@ class ItemListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var mCallback: SelectionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            param1 = it.getString(ITEM_LIST_ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
     }
@@ -50,17 +53,14 @@ class ItemListFragment : Fragment() {
 
     private class SimpleItemRecyclerViewAdapter constructor(
         parent: ItemListFragment,
-        items: List<DummyContent.DummyItem>
+        items: List<DummyItem>
     ) : RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
-        private val mParentFragment: ItemListFragment
-        private val mValues: List<DummyContent.DummyItem>
+        private lateinit var mParentFragment: ItemListFragment
+        private val mValues: List<DummyItem>
         private val mOnClickListener =
             View.OnClickListener { view ->
-//                val item: DummyContent.DummyItem = view.tag as DummyContent.DummyItem
-//                val context = view.context
-//                val intent = Intent(context, ItemDetailActivity::class.java)
-//                intent.putExtra(ItemDetailActivity.ARG_ITEM_ID, item.id)
-//                context.startActivity(intent)
+                val item: DummyItem = view.tag as DummyItem
+                mParentFragment.mCallback?.onListItemSelected(item)
             }
 
         init {
@@ -96,6 +96,22 @@ class ItemListFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            mCallback = context as SelectionListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(
+                context.toString()
+                        + " must implement SelectionListener"
+            )
+        }
+    }
+
+    interface SelectionListener {
+        fun onListItemSelected(item: DummyItem?)
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -110,7 +126,7 @@ class ItemListFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             ItemListFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
+                    putString(ITEM_LIST_ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
             }

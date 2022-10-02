@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import es.unex.giiis.asee.masterdetailkotlin.dummy.DummyContent
 
 
 /**
@@ -15,19 +15,13 @@ import com.google.android.material.snackbar.Snackbar
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class ItemListActivity : AppCompatActivity() {
+class ItemListActivity : AppCompatActivity(), ItemListFragment.SelectionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
 
-//        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-//        setSupportActionBar(toolbar)
-//        toolbar.title = title
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-
+        fab.setOnClickListener {
             val fragment = ItemDetailFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
@@ -41,5 +35,16 @@ class ItemListActivity : AppCompatActivity() {
                 .add(R.id.frameLayout, fragment)
                 .commit()
         }
+    }
+
+    override fun onListItemSelected(item: DummyContent.DummyItem?) {
+        val fragment = ItemDetailFragment()
+        val bundle = Bundle()
+        bundle.putString(ITEM_LIST_ARG_PARAM1, item?.id ?: "")
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frameLayout, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
