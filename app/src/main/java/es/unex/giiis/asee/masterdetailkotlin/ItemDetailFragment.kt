@@ -28,6 +28,8 @@ class ItemDetailFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var mItem: DummyContent.DummyItem? = null
+    private var mAppBarLayout: CollapsingToolbarLayout? = null
+    private var mTvDetail: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +57,12 @@ class ItemDetailFragment : Fragment() {
         mItem = DummyContent.ITEM_MAP[item]
 
         // Change Title according to item
-        val appBarLayout = v.findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
-        appBarLayout.title = mItem?.content
+        mAppBarLayout = v.findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
+        mAppBarLayout?.title = mItem?.content
 
         // Show item content
-        val tvDetail = v.findViewById<TextView>(R.id.item_detail)
-        tvDetail.text = mItem?.details ?: ""
+        mTvDetail = v.findViewById<TextView>(R.id.item_detail)
+        mTvDetail?.text = mItem?.details ?: ""
         return v
     }
 
@@ -72,6 +74,20 @@ class ItemDetailFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = (activity as AppCompatActivity?)!!.title
+    }
+
+    fun updateItem(id: String) {
+        mItem = DummyContent.ITEM_MAP[id]
+
+        // Change Title according to item
+        mAppBarLayout?.title = mItem?.content
+
+        // Show item content
+        mTvDetail?.text = mItem?.details ?: ""
+    }
+
+    private fun twoPane(): Boolean {
+        return activity?.findViewById<View?>(R.id.detail_fragment) != null
     }
 
     companion object {

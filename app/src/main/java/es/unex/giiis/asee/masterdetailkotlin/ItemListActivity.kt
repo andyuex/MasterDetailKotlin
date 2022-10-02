@@ -29,7 +29,7 @@ class ItemListActivity : AppCompatActivity(), ItemListFragment.SelectionListener
                 .commit()
         }
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && !twoPane()) {
             val fragment = ItemListFragment()
             supportFragmentManager.beginTransaction()
                 .add(R.id.frameLayout, fragment)
@@ -38,13 +38,22 @@ class ItemListActivity : AppCompatActivity(), ItemListFragment.SelectionListener
     }
 
     override fun onListItemSelected(item: DummyContent.DummyItem?) {
-        val fragment = ItemDetailFragment()
-        val bundle = Bundle()
-        bundle.putString(ITEM_LIST_ARG_PARAM1, item?.id ?: "")
-        fragment.arguments = bundle
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frameLayout, fragment)
-            .addToBackStack(null)
-            .commit()
+        if (!twoPane()) {
+            val fragment = ItemDetailFragment()
+            val bundle = Bundle()
+            bundle.putString(ITEM_LIST_ARG_PARAM1, item?.id ?: "")
+            fragment.arguments = bundle
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            val fragment = supportFragmentManager.findFragmentById(R.id.detail_fragment) as ItemDetailFragment?
+            fragment?.updateItem(item!!.id)
+        }
+    }
+
+    private fun twoPane(): Boolean {
+        return findViewById<View?>(R.id.detail_fragment) != null
     }
 }
