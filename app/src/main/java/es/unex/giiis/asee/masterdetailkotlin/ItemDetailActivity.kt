@@ -41,17 +41,15 @@ class ItemDetailActivity : AppCompatActivity() {
 
         // Get dummy content for the selected item
         val item = intent.getStringExtra(ARG_ITEM_ID)
-        mItem = DummyContent.ITEM_MAP.get(item)
+        mItem = DummyContent.ITEM_MAP[item]
 
         // Change Title according to item
         val appBarLayout = findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
-        if (appBarLayout != null) {
-            appBarLayout.title = mItem?.content
-        }
+        appBarLayout.title = mItem?.content
 
         // Show item content
         val tvDetail = findViewById<TextView>(R.id.item_detail)
-        tvDetail.setText(mItem?.details ?: "")
+        tvDetail.text = mItem?.details ?: ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
